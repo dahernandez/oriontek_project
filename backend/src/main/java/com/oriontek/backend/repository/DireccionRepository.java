@@ -23,6 +23,8 @@ public interface DireccionRepository extends JpaRepository<Direccion, Long> {
 
     List<Direccion> findByCiudadStartingWithIgnoreCase(String prefijo);
 
+    List<Direccion> findByCiudadContainingIgnoreCase(String ciudad);
+
     void deleteByClienteId(Long clienteId);
 
     long countByClienteId(Long clienteId);
