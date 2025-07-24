@@ -9,7 +9,7 @@ Desarrollar una solución que permita crear, consultar y administrar clientes, c
 ## Stack Tecnológico
 
 - Java 21 (LTS)
-- Spring Boot 3.5.4
+- Spring Boot 3.3.5
 - PostgreSQL
 - JPA / Hibernate
 - Arquitectura CQRS
