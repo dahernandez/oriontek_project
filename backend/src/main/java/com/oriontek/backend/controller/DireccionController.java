@@ -43,6 +43,34 @@ public class DireccionController {
         return dto;
     }
 
+    @PutMapping("/{id}")
+    public DireccionDto actualizar(@PathVariable Long id, @Valid @RequestBody DireccionDto dto) {
+        Cliente cliente = clienteQueryService.obtenerPorId(dto.getClienteId());
+
+        Direccion direccion = Direccion.builder()
+                .ciudad(dto.getCiudad())
+                .calle(dto.getCalle())
+                .numero(dto.getNumero())
+                .cliente(cliente)
+                .build();
+
+        Direccion actualizada = commandService.actualizarDireccion(id, direccion);
+        dto.setId(actualizada.getId());
+        return dto;
+    }
+
+    @GetMapping("/{id}")
+    public DireccionDto obtenerPorId(@PathVariable Long id) {
+        Direccion d = queryService.obtenerPorId(id);
+        DireccionDto dto = new DireccionDto();
+        dto.setId(d.getId());
+        dto.setCiudad(d.getCiudad());
+        dto.setCalle(d.getCalle());
+        dto.setNumero(d.getNumero());
+        dto.setClienteId(d.getCliente().getId());
+        return dto;
+    }
+
     @GetMapping("/cliente/{clienteId}")
     public List<DireccionDto> porCliente(@PathVariable Long clienteId) {
         return queryService.obtenerPorClienteId(clienteId).stream().map(d -> {
@@ -59,5 +87,36 @@ public class DireccionController {
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Long id) {
         commandService.eliminarDireccion(id);
+    }
+
+    @GetMapping
+    public List<DireccionDto> listar() {
+        return queryService.obtenerTodas().stream().map(d -> {
+            DireccionDto dto = new DireccionDto();
+            dto.setId(d.getId());
+            dto.setCiudad(d.getCiudad());
+            dto.setCalle(d.getCalle());
+            dto.setNumero(d.getNumero());
+            dto.setClienteId(d.getCliente().getId());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @GetMapping("/count/cliente/{clienteId}")
+    public long contarPorCliente(@PathVariable Long clienteId) {
+        return queryService.contarPorCliente(clienteId);
+    }
+
+    @GetMapping("/buscar")
+    public List<DireccionDto> buscarPorCiudadOCalle(@RequestParam String ciudad, @RequestParam String calle) {
+        return queryService.buscarPorCiudadOCalle(ciudad, calle).stream().map(d -> {
+            DireccionDto dto = new DireccionDto();
+            dto.setId(d.getId());
+            dto.setCiudad(d.getCiudad());
+            dto.setCalle(d.getCalle());
+            dto.setNumero(d.getNumero());
+            dto.setClienteId(d.getCliente().getId());
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

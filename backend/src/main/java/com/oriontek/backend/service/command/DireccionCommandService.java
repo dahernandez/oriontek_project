@@ -16,6 +16,15 @@ public class DireccionCommandService {
 
     @Transactional
     public Direccion crearDireccion(Direccion direccion) {
+        if (direccion.getCiudad() == null || direccion.getCiudad().isBlank()) {
+            throw new IllegalArgumentException("La ciudad es obligatoria");
+        }
+        if (direccion.getCalle() == null || direccion.getCalle().isBlank()) {
+            throw new IllegalArgumentException("La calle es obligatoria");
+        }
+        if (direccion.getNumero() == null || direccion.getNumero().isBlank()) {
+            throw new IllegalArgumentException("El número es obligatorio");
+        }
         return direccionRepository.save(direccion);
     }
 

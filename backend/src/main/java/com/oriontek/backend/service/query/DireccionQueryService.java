@@ -35,4 +35,8 @@ public class DireccionQueryService {
     public long contarPorCliente(Long clienteId) {
         return direccionRepository.countByClienteId(clienteId);
     }
+
+    public List<Direccion> buscarPorCiudadOCalle(String ciudad, String calle) {
+        return direccionRepository.findByCiudadOrCalle(ciudad, calle);
+    }
 }

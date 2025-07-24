@@ -23,8 +23,8 @@ Desarrollar una solución que permita crear, consultar y administrar clientes, c
 ## Estado Actual
 
 ✅ Estructura inicial del proyecto creada  
-❌ Lógica de negocio  
-❌ Endpoints REST  
+✅ Lógica de negocio  
+✅ Endpoints REST  
 ❌ Diagrama CQRS 
 
 ---

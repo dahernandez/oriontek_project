@@ -16,6 +16,9 @@ public class ClienteCommandService {
 
     @Transactional
     public Cliente crearCliente(Cliente cliente) {
+        if (clienteRepository.existsByNombre(cliente.getNombre())) {
+            throw new IllegalArgumentException("Ya existe un cliente con el nombre: " + cliente.getNombre());
+        }
         return clienteRepository.save(cliente);
     }
 

@@ -31,4 +31,12 @@ public class ClienteQueryService {
     public long contarClientes() {
         return clienteRepository.count();
     }
+
+    public List<Cliente> buscarPorPrefijoNombre(String prefijo) {
+        return clienteRepository.findByNombreStartingWith(prefijo);
+    }
+
+    public long contarClientesConDirecciones() {
+        return clienteRepository.findByDireccionesIsNotNull().size();
+    }
 }

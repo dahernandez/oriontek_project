@@ -33,6 +33,17 @@ public class ClienteController {
         return dto;
     }
 
+    @PutMapping("/{id}")
+    public ClienteDto actualizar(@PathVariable Long id, @Valid @RequestBody ClienteDto dto) {
+        Cliente cliente = Cliente.builder()
+                .nombre(dto.getNombre())
+                .build();
+
+        Cliente actualizado = commandService.actualizarCliente(id, cliente);
+        dto.setId(actualizado.getId());
+        return dto;
+    }
+
     @GetMapping
     public List<ClienteDto> listar() {
         return queryService.obtenerTodos().stream().map(c -> {
@@ -57,10 +68,24 @@ public class ClienteController {
         commandService.eliminarCliente(id);
     }
 
-    @GetMapping("/ping")
-    public String ping() {
-        return "pong";
+    @GetMapping("/count")
+    public long contar() {
+        return queryService.contarClientes();
     }
 
+    @GetMapping("/buscar/prefijo/{prefijo}")
+    public List<ClienteDto> buscarPorPrefijo(@PathVariable String prefijo) {
+        return queryService.buscarPorPrefijoNombre(prefijo).stream().map(c -> {
+            ClienteDto dto = new ClienteDto();
+            dto.setId(c.getId());
+            dto.setNombre(c.getNombre());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
+    @GetMapping("/con-direcciones")
+    public long contarClientesConDirecciones() {
+        return queryService.contarClientesConDirecciones();
+    }
 }
 

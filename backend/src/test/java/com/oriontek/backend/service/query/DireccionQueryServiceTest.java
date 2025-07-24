@@ -1,5 +1,6 @@
 package com.oriontek.backend.service.query;
 
+import com.oriontek.backend.model.Cliente;
 import com.oriontek.backend.model.Direccion;
 import com.oriontek.backend.repository.DireccionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -19,34 +21,37 @@ class DireccionQueryServiceTest {
     @InjectMocks
     private DireccionQueryService direccionQueryService;
 
+    private Direccion d;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        Cliente c = new Cliente();
+        c.setId(1L);
+        d = Direccion.builder().id(1L).ciudad("SD").calle("A").numero("1").cliente(c).build();
     }
 
     @Test
-    void buscarPorClienteId_debeRetornarDirecciones() {
-        Direccion d = new Direccion();
-        d.setCiudad("La Vega");
-
-        when(direccionRepository.findByClienteId(1L)).thenReturn(List.of(d));
-
-        List<Direccion> direcciones = direccionQueryService.obtenerPorClienteId(1L);
-
-        assertEquals(1, direcciones.size());
-        assertEquals("La Vega", direcciones.get(0).getCiudad());
+    void obtenerTodas() {
+        when(direccionRepository.findAll()).thenReturn(List.of(d));
+        assertEquals(1, direccionQueryService.obtenerTodas().size());
     }
 
     @Test
-    void buscarPorCiudad_debeBuscarIgnorandoCase() {
-        Direccion d = new Direccion();
-        d.setCiudad("Punta Cana");
+    void obtenerPorId_existente() {
+        when(direccionRepository.findById(1L)).thenReturn(Optional.of(d));
+        assertEquals("SD", direccionQueryService.obtenerPorId(1L).getCiudad());
+    }
 
-        when(direccionRepository.findByCiudadContainingIgnoreCase("punta")).thenReturn(List.of(d));
+    @Test
+    void obtenerPorId_noExiste() {
+        when(direccionRepository.findById(2L)).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> direccionQueryService.obtenerPorId(2L));
+    }
 
-        List<Direccion> resultado = direccionQueryService.buscarPorCiudad("punta");
-
-        assertEquals(1, resultado.size());
-        assertEquals("Punta Cana", resultado.get(0).getCiudad());
+    @Test
+    void contarPorCliente() {
+        when(direccionRepository.countByClienteId(1L)).thenReturn(5L);
+        assertEquals(5L, direccionQueryService.contarPorCliente(1L));
     }
 }

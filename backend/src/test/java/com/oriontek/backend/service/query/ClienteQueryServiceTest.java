@@ -6,8 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -26,30 +26,24 @@ class ClienteQueryServiceTest {
     }
 
     @Test
-    void obtenerTodos_debeRetornarTodosLosClientes() {
-        Cliente c1 = new Cliente();
-        c1.setNombre("Ana");
-        Cliente c2 = new Cliente();
-        c2.setNombre("Luis");
-
-        when(clienteRepository.findAll()).thenReturn(Arrays.asList(c1, c2));
-
-        List<Cliente> clientes = clienteQueryService.obtenerTodos();
-
-        assertEquals(2, clientes.size());
-        verify(clienteRepository).findAll();
+    void contarClientes() {
+        when(clienteRepository.count()).thenReturn(10L);
+        assertEquals(10L, clienteQueryService.contarClientes());
     }
 
     @Test
-    void buscarPorNombre_debeRetornarCoincidenciasIgnorandoCase() {
+    void obtenerPorId_existente() {
         Cliente c = new Cliente();
-        c.setNombre("Pedro");
+        c.setId(1L);
+        when(clienteRepository.findById(1L)).thenReturn(Optional.of(c));
 
-        when(clienteRepository.findByNombreContainingIgnoreCase("ped")).thenReturn(List.of(c));
+        Cliente res = clienteQueryService.obtenerPorId(1L);
+        assertEquals(1L, res.getId());
+    }
 
-        List<Cliente> encontrados = clienteQueryService.buscarPorNombre("ped");
-
-        assertEquals(1, encontrados.size());
-        assertEquals("Pedro", encontrados.get(0).getNombre());
+    @Test
+    void obtenerPorId_noExistente() {
+        when(clienteRepository.findById(2L)).thenReturn(Optional.empty());
+        assertThrows(RuntimeException.class, () -> clienteQueryService.obtenerPorId(2L));
     }
 }
