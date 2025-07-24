@@ -12,5 +12,4 @@ public class ClienteDto {
     @NotBlank(message = "El nombre no puede estar vacío")
     private String nombre;
 
-    private List<DireccionDto> direcciones;
 }
