@@ -25,6 +25,24 @@ Desarrollar una solución que permita crear, consultar y administrar clientes, c
 ✅ Estructura inicial del proyecto creada  
 ✅ Lógica de negocio  
 ✅ Endpoints REST  
-❌ Diagrama CQRS 
+✅ Diagrama CQRS 
 
 ---
+
+## Cómo ejecutar el proyecto
+
+```bash
+# Genera el .jar
+cd backend
+mvn clean package -DskipTests
+cd ..
+
+# Levanta BD + Backend
+docker-compose up --build
+
+| Servicio   | URL                                                                            | Credenciales                  |
+| ---------- | ------------------------------------------------------------------------------ | ----------------------------- |
+| API        | [http://localhost:8080](http://localhost:8080)                                 | -                             |
+| Swagger    | [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) | -                             |
+| PostgreSQL | localhost:5432                                                                 | user / password (DB oriontek) |
+
